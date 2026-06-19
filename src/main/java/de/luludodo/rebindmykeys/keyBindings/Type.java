@@ -1,8 +1,9 @@
 package de.luludodo.rebindmykeys.keyBindings;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiMultiplayer;
+import net.minecraft.client.entity.EntityPlayerSP;
 
 public enum Type {
     EVERYWHERE(),
@@ -10,25 +11,39 @@ public enum Type {
     MOUNTED(GAME),
     UNMOUNTED(GAME),
     MENU(EVERYWHERE),
-    MULTIPLAYER_MENU(MENU);
+    MULTIPLAYER_MENU(MENU),
+    DEBUG_COMBO(GAME);
 
     public boolean currentlyActive() {
-        MinecraftClient client = MinecraftClient.getInstance();
-        Screen screen = client.currentScreen;
-        return switch (this) {
-            case EVERYWHERE -> true;
-            case GAME -> screen == null;
-            case MOUNTED -> screen == null && client.player.hasVehicle();
-            case UNMOUNTED -> screen == null && !client.player.hasVehicle();
-            case MENU -> screen != null;
-            case MULTIPLAYER_MENU -> screen instanceof MultiplayerScreen;
-        };
+        Minecraft mc = Minecraft.getMinecraft();
+        GuiScreen screen = mc.currentScreen;
+        EntityPlayerSP player = mc.thePlayer;
+        switch (this) {
+            case EVERYWHERE:
+                return true;
+            case GAME:
+                return screen == null;
+            case MOUNTED:
+                return screen == null && player != null && player.ridingEntity != null;
+            case UNMOUNTED:
+                return screen == null && player != null && player.ridingEntity == null;
+            case MENU:
+                return screen != null;
+            case MULTIPLAYER_MENU:
+                return screen instanceof GuiMultiplayer;
+            case DEBUG_COMBO:
+                return screen == null;
+            default:
+                return true;
+        }
     }
 
     private final Type parent;
+
     Type() {
         this.parent = null;
     }
+
     Type(Type parent) {
         this.parent = parent;
     }
