@@ -1,4 +1,4 @@
-# RebindMyKeys allows you to rebind normally hard-coded keybindings. It also allows escape to be used in keybindings and adds a button to allow unbinding of keys.
+RebindMyKeys allows you to rebind normally hard-coded keybindings. It also allows escape to be used in keybindings and adds a button to allow unbinding of keys.
 
 # Why do I want this mod?
 
